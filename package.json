@@ -1,5 +1,5 @@
 {
-  "name": "tot",
+  "name": "totneil",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -13,8 +13,8 @@
     "type": "git",
     "url": "git+https://github.com/Lpeanut/tot.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["tot", "create cli", "cli"],
+  "author": "Neil",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Lpeanut/tot/issues"

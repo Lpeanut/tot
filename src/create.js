@@ -3,12 +3,13 @@ const axios = require('axios')
 const ora = require('ora')
 const Inquirer = require('inquirer')
 const { promisify } = require('util');
-const downloadGitRepo = require('download-git-repo')
+let downloadGitRepo = require('download-git-repo')
+downloadGitRepo = promisify(downloadGitRepo)
 let ncp = require('ncp');
 ncp = promisify(ncp);
 
 
-const downloadDirectory = require('./constance');
+const { downloadDirectory } = require('./constance');
 
 const download = async (repo, tag) => {
   let api = `Lpeanut/${repo}`
@@ -17,6 +18,7 @@ const download = async (repo, tag) => {
   }
   console.log(repo, tag)
   const dest = `${downloadDirectory}/${repo}`
+  console.log(dest)
   await downloadGitRepo(api, dest)
   return dest
 }
@@ -32,11 +34,9 @@ const waitFnloading = (fn, message) => async(...args) => {
   } catch (error) {
     console.log('error')
     spinner.succeed()
+    process.exit(1)
     return []
   }
-  // const result = await fn(...args)
-  // spinner.succeed()
-  // return result;
 }
 
 const fetchTagList = async () => {
@@ -56,7 +56,6 @@ const fetchRepoList = async () => {
 
 module.exports = async (projectName) => {
   let repos = await waitFnloading(fetchRepoList, 'fetching template')()
-  console.log(repos)
   repos = repos.map(item => item.name)
   const { repo } = await Inquirer.prompt({
     name: 'repo',
@@ -67,13 +66,12 @@ module.exports = async (projectName) => {
   let tags = await waitFnloading(fetchTagList, 'fetching tags')(repo)
   tags = tags.map(item => item.name)
   const { tag } = await Inquirer.prompt({
-    name: 'repo',
+    name: 'tag',
     type: 'list',
     message: 'please choise a tag',
     choices: tags
   })
-  // const result = await download(repo, tag)
-  console.log('repo, tag', repo, tag)
-  const result = await waitFnloading(download, 'do') (repo, tag)
+  const result = await waitFnloading(download, 'download') (repo, tag)
+  console.log(result)
   ncp(result, path.resolve(projectName))
 }
