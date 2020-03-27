@@ -32,7 +32,7 @@ const waitFnloading = (fn, message) => async(...args) => {
   } catch (error) {
     console.log('error')
     spinner.succeed()
-    return ['hhh']
+    return []
   }
   // const result = await fn(...args)
   // spinner.succeed()
